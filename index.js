@@ -1,8 +1,6 @@
 var async = require('async');
-var mqNode = require('mq-node');
 var _ = require('lodash');
 var fs = require('fs');
-var mysql;
 
 var extend = function(obj) {
 	for (var i = 1; i < arguments.length; i++) for (var key in arguments[i]) obj[key] = arguments[i][key];
@@ -82,7 +80,7 @@ module.exports = function(options,done){
 		dest:'./data.sql',
 	}
 
-	mysql = mqNode(extend({},defaultConnection,{
+	var mysql = require('mq-node')(extend({},defaultConnection,{
 		host:options.host,
 		user:options.user,
 		password:options.password,
