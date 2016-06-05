@@ -8,7 +8,7 @@ var extend = function(obj) {
 }
 
 var escapeUnquoted = function(val){
-	return mysql.escape(val).slice(0, -1).substr(1);
+	return require('mysql').escape(val).slice(0, -1).substr(1);
 }
 
 // var addslashes = function(str){

@@ -9,8 +9,8 @@ describe('mysql test', function() {
 	var dbTest = 'dump_test';
 	var connection = {
 		host: 'localhost',
-		user: 'root',
-		password: ''
+		user: 'mobius',
+		password: 'dimmy2'
 	};
 
 	mysql = mysql(connection);
@@ -191,6 +191,38 @@ describe('mysql test', function() {
 			fs.unlinkSync(dest);
 			done();
 		})
+	});
+
+	it('should create multiple dump file with schema and data', function(done) {
+		this.timeout(8000 * 5);
+
+    var mulitdump = 5,
+    		completed = 0;
+
+    for( var i = 0; i < mulitdump; i++ ){
+			
+			var dest = './multidump-' + (i+1) + '.sql';
+
+			mysqlDump({
+				host: 'localhost',
+				user: 'root',
+				password: '',
+				database: dbTest,
+				dest:dest
+			},function(this_dest){
+				
+				return function(err){
+					var file = String(fs.readFileSync(this_dest));
+					expect(err).to.be.null;
+					expect(file).not.to.be.null;
+					expect(file).to.contain("INSERT INTO ");
+					expect(file).to.contain("CREATE TABLE ");
+					fs.unlinkSync(this_dest);
+					completed += 1;
+					if( completed === mulitdump ) done();
+				}
+			}(dest))
+    };
 	});
 
 	it('should create a dump file with schema and data with tables and create if exist', function(done) {
